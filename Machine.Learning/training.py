@@ -1,8 +1,10 @@
 import torch
 from torch import nn
 from generate_chart import plot_predictions as plot
-from linear import linear_expression as linear_module
-#find ut what device is available 
+from model import linear_expression as linear_module
+from model import linear_expression_v2 as linear_module_v2
+from pathlib import Path
+#find out what device is available 
 device = "cuda" if torch.cuda.is_available else "cpu"
 # creating train data and test data for our module
 weight = 0.7
@@ -22,21 +24,24 @@ print(list(model_0.parameters()))
 with torch.inference_mode():
   y_preds = model_0(x_test)
 plot(x_train , y_train , x_test , y_test , predictions= y_preds)
+
 #specify loss function and an optimizer 
 loss_fn = nn.L1Loss()
 #learning rate must be choosen with great visual of the model
-optimizer = torch.optim.SGD(params=model_0.parameters(),lr=0.0001)
+optimizer = torch.optim.SGD(params=model_0.parameters(),lr=0.001)
 
 # loop throu and train model to get close to the actual model
 #increasing the epochs will result in better and closer outcomes to the real data and model
 epochs = 10000
 for epoch in range(epochs):
+  #training
   model_0.train()
   y_pred = model_0(x_train)
   loss = loss_fn(y_pred ,y_train)
   optimizer.zero_grad()
   loss.backward()
   optimizer.step()
+  #testing
   model_0.eval()
   with torch.inference_mode():
    test_pred = model_0(x_test)
@@ -51,3 +56,15 @@ with torch.inference_mode():
   y_preds = model_0(x_test)
 plot(x_train , y_train , x_test , y_test , y_preds )
    
+#saving our trained model 
+MODEL_PATH = Path("models")
+MODEL_PATH.mkdir(parents= True , exist_ok=True)
+
+MODEL_NAME = "01_work_flow_model_0"
+MODEL_SAVE_PATH = MODEL_PATH / MODEL_NAME
+
+torch.save(obj = model_0.state_dict() , f = MODEL_SAVE_PATH)
+#try loading the saved trained model 
+loaded_model_0 = linear_module()
+loaded_model_0.load_state_dict(torch.load(MODEL_SAVE_PATH , weights_only=True))
+print(loaded_model_0.state_dict())
