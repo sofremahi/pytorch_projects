@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from helper_functions import plot_predictions, plot_decision_boundary
 
 def plot_predictions(train_data,
                      train_labels,
@@ -22,3 +23,15 @@ def plot_predictions(train_data,
   plt.legend(prop={"size": 14});
       # Show the plot
   plt.show()
+  
+  
+def plot_predictions_circle_boundary(model , x_train , y_train , 
+                                     x_test , y_test)  :
+  #plot decision boundary of our model with helper_functions.py 
+  plt.figure(figsize=(12,6))
+  plt.subplot(1,2,1)  
+  plt.title("train")
+  plot_decision_boundary(model , x_train , y_train) 
+  plt.subplot(1,2,2)    
+  plt.title("test")
+  plot_decision_boundary(model , x_test , y_test)

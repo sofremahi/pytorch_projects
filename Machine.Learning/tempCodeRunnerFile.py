@@ -1,0 +1,7 @@
+plt.figure(figsize=(12,6))
+# plt.subplot(1,2,1)  
+# plt.title("train")
+# plot_decision_boundary(model_0 , x_train , y_train) 
+# plt.subplot(1,2,2)    
+# plt.title("test")
+# plot_decision_boundary(model_0 , x_test , y_test)
