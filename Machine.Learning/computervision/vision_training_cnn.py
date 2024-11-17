@@ -93,7 +93,7 @@ output = flatten_model(x)
 print(f"{x.shape} color channels , height , width {output.shape} color channel , height*width")
 #creating out model
 from model import fasion_mnist_model
-model_0 =  fasion_mnist_model(input_shape= 784 ,
+model_0 =  fasion_mnist_model(input_shape= 28*28 ,
                               hidden_units= 8 ,
                               output_shape=len(class_names))
 #import accuracy metric
@@ -103,7 +103,7 @@ loss_fn = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model_0.parameters(),lr=0.1)
 #create our timeout function
 from timeit import default_timer as timer
-def print_pred_time(start : float , end :float , device : torch.device = None):
+def print_time(start : float , end :float , device : torch.device = None):
     total_time = end - start 
     print(f"total time on device {device} is {total_time:.3f}")
     return total_time
@@ -113,6 +113,7 @@ start_time = timer()
 #start training model 
 epochs = 6
 for epoch in range(epochs):
+    print(f"Epoch: {epoch}\n------")
     train_loss = 0 
     #add a loop to go through out the training batches
     for batch , (x,y) in enumerate(train_data_loader):
@@ -127,12 +128,12 @@ for epoch in range(epochs):
         #optimizer step
         optimizer.step()
         if batch % 400 == 0 :
-            print(f"looked at {batch  * len(x)/(len(train_data_loader.dataset))}samples")
+            print(f"looked at {batch  * len(x)}/{(len(train_data_loader.dataset))} samples")
     train_loss /= len(train_data_loader)
     
     #testing 
     test_loss , acc = 0 , 0
-    model_0.eval 
+    model_0.eval() 
     with torch.inference_mode():
      for x , y in test_data_loader:
         test_pred = model_0(x)    
@@ -143,3 +144,8 @@ for epoch in range(epochs):
      #calculate the test loss        
      test_loss /= len(test_data_loader)
      acc /= len(test_data_loader) 
+     # Print out what's happening
+    print(f"\nTrain loss: {train_loss:.4f} | Test loss: {test_loss:.4f}, Test acc: {acc:.4f}")
+
+end_time = timer()     
+total_time = print_time(start=start_time , end=end_time)
