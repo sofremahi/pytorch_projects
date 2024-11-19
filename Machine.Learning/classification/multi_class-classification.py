@@ -4,7 +4,7 @@ import sklearn
 from sklearn.datasets import make_blobs
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-from models.model import blob_model
+from model import blob_model
 from help_functions import accuracy_fn
 from generate_chart import plot_predictions_circle_boundary
 

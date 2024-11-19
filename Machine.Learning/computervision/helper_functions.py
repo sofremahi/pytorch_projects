@@ -292,3 +292,76 @@ def download_data(source: str,
             os.remove(data_path / target_file)
     
     return image_path
+
+
+from timeit import default_timer as timer
+
+def print_time(start : float , end :float , device : torch.device = None):
+    total_time = end - start 
+    print(f"total time on device {device} is {total_time:.3f}")
+    return total_time
+
+
+from tqdm.auto import tqdm
+
+def eval_model(model:torch.nn.Module,
+               data_loader:torch.utils.data.DataLoader ,
+               loss_fn : torch.nn.Module,
+               accuracy_fn,
+               device):
+    los , acc = 0 , 0 
+    model.eval()
+    with torch.inference_mode:
+        for x , y in tqdm(data_loader):
+            x, y = x.to(device) , y.to(device)
+            y_pred = model(x)
+            loss += loss_fn(y_pred , y)
+            acc += accuracy_fn(y_true=y, y_pred=y_pred.argmax(dim=1))
+        loss /= len(data_loader)  
+        acc /= len(data_loader)  
+        return {
+          "model_loss": loss.item(),
+          "model_acc": acc}
+    
+def train_step(model:torch.nn.Module,
+                data_loader: torch.utils.data.DataLoader,
+               loss_fn : torch.nn.Module,
+               optimizer :torch.optim.Optimizer,
+               accuracy_fn,
+               device):
+    train_loss , train_acc = 0, 0
+    model.train()
+    for batch , (x,y) in enumerate(data_loader):
+        
+        x , y = x.to(device) , y.to(device)
+        y_pred = model(x)
+        loss = loss_fn(y_pred , y)
+        train_loss += loss
+        train_acc += accuracy_fn(y , y_pred.argmax(dim=1))
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+    train_loss /= len(data_loader)
+    train_acc /= len(data_loader)
+    print(f"Train loss: {train_loss:.5f} | Train acc: {train_acc:.2f}%")
+def test_step(model:torch.nn.Module,
+              data_loader:torch.utils.data.DataLoader,
+              loss_fn:torch.nn.Module,
+              optimzer:torch.optim.Optimizer,
+              accuracy_fn,
+              device):
+    model.to(device)
+    test_loss , test_acc = 0 , 0 
+    model.eval()
+    with torch.inference_mode():
+        for batch , (x ,y) in enumerate(data_loader):
+            x , y = x.to(device) , y.to(device)
+            test_pred = model(x)
+            test_loss += loss_fn( test_pred , y)
+            test_acc += accuracy_fn(y , test_pred.argmax(dim=1))
+        test_loss /= len(data_loader)
+        test_acc /= len(data_loader)    
+        print(f"Test loss: {test_loss:.5f} | Test acc: {test_acc:.2f}%\n")
+#try with convolutional neural networks    
+
+             
