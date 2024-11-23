@@ -17,31 +17,12 @@ data_transform = transforms.Compose([
     transforms.ToTensor()
 ])
 print(data_transform(image).shape)
-import random
-from PIL import Image
-from matplotlib import pyplot as plt
-def plot_transformed_images(image_paths , transform , n=3 , seed =None):
-    if seed:
-        random.seed(seed)
-    random_image_paths = random.sample(image_paths, k=n)   
-    for image_path in random_image_paths:
-        with Image.open(image_path) as f:
-         fig , ax = plt.subplots(nrows=1 , ncols=2)
-         ax[0].imshow(f)
-         ax[0].set_title(f"Original\nSize: {f.size}")
-         ax[0].axis(False)
-         transformed_image = transform(f).permute(1, 2, 0) #  (C, H, W) -> (H, W, C)
-         ax[1].imshow(transformed_image)
-         ax[1].set_title(f"Transformed\nShape: {transformed_image.shape}")
-         ax[1].axis("off")
-
-        fig.suptitle(f"Class: {image_path.parent.stem}", fontsize=16)
+from helper import plot_transformed_images
 # plot_transformed_images(image_paths=image_paths,
 #                         transform=data_transform,
 #                         n=3,
 #                         seed=None)
 # plt.show()    
-
 #instantialing our train and test data 
 train_data = datasets.ImageFolder(root=train_dir,
                                   transform = data_transform , 
@@ -52,3 +33,36 @@ test_data = datasets.ImageFolder(root=test_dir,
 class_names = train_data.classes
 class_dict = train_data.class_to_idx
 print(class_dict)
+#visualize our train data 
+img , label = train_data[0][0] , train_data[0][1]
+print(f" the shape of our image tensor is {img.shape} and the lable is {label}")
+img_permute = img.permute(1, 2, 0)
+
+# diffrent shapes
+from matplotlib import pyplot as plt
+print(f"Original shape: {img.shape} -> [color_channels, height, width]")
+print(f"Image permute: {img_permute.shape} -> [height, width, color_channels]")
+# Plot the image
+# plt.figure(figsize=(10, 7))
+# plt.imshow(img_permute)
+# plt.axis("off")
+# plt.title(class_names[label], fontsize=14)
+# plt.show()
+
+#creating data loaders
+import os
+cores = os.cpu_count()
+BATCH_SIZE = 32
+train_data_loader = DataLoader(dataset=train_data, 
+                                   batch_size=BATCH_SIZE, 
+                                   num_workers=0, 
+                                   shuffle=True)
+
+test_data_loader = DataLoader(dataset=test_data, 
+                                  batch_size=BATCH_SIZE, 
+                                  num_workers=0, 
+                                  shuffle=False)
+img , label = next(iter(train_data_loader))
+print(f"image shape is : {img.shape} [batch , color channels , height , width]")
+print(f"label shape is : {label.shape} [batch size * label(1)]")
+

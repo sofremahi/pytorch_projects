@@ -3,11 +3,11 @@ from pathlib import Path
 
 image_path = Path("data/") / "pizza_steak_sushi"
 
-def explor_directory(dir_path):
-    """" returning a path contents """
-    for dirpath , dirnames , filenames in os.walk(dir_path):
-     print(f"There are {len(dirnames)} directories and {len(filenames)} images in '{dirpath}'.")    
-explor_directory(image_path)    
+# def explor_directory(dir_path):
+#     """" returning a path contents """
+#     for dirpath , dirnames , filenames in os.walk(dir_path):
+#      print(f"There are {len(dirnames)} directories and {len(filenames)} images in '{dirpath}'.")    
+# explor_directory(image_path)    
 
 train_dir = image_path / "train"
 test_dir = image_path / "test"
