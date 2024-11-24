@@ -1,0 +1,1 @@
+optimizer = torch.optim.Adam(model_1.parameters(),lr =0.001)

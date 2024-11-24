@@ -130,7 +130,8 @@ def train(model: torch.nn.Module,
           optimizer : torch.optim.Optimizer,
           loss_fn: torch.nn.Module = torch.nn.CrossEntropyLoss(),
           epochs : int = 5 , 
-          device=None):
+          device=None,
+          scheduler = None ):
   #create a DICT
   results = {"train_loss": [],
              "train_acc": [],
@@ -147,6 +148,10 @@ def train(model: torch.nn.Module,
                                     test_dataloader,
                                     loss_fn,
                                     device)
+    #if any 
+    if scheduler:
+            # scheduler.step(test_loss)
+            scheduler.step()
 #see whats happening
     print(f"Epoch: {epoch} | Train loss: {train_loss:.4f} | Train acc: {train_acc:.4f} | Test loss: {test_loss:.4f} | Test acc: {test_acc:.4f}")
     #set dictionary results
@@ -156,4 +161,33 @@ def train(model: torch.nn.Module,
     results["test_acc"].append(test_acc)
 
   return results
+
+import torchvision
+def pred_and_plot_image(model : torch.nn.Module,
+                        image_path : str ,
+                        class_names :List[str]=None,
+                        transform=None,
+                        device=None):
+    target_image = torchvision.io.read_image(image_path)
+    #deviding so our data will be between 0,1
+    target_image = target_image/255
+    #transform
+    if transform:
+        target_image = transform(target_image)
+    if device:
+        target_image = target_image.to(device)    
+    model.eval()
+    with torch.inference_mode():
+        #add extra dimention to be processed as a batch of one
+        target_image = target_image.unsqueeze(0)
+        logits = model(target_image)
+        preds = torch.softmax(logits , dim=1)    
+        label = torch.argmax(preds , dim =1)
+        plt.imshow(target_image.squeeze().permute(1,2,0)) #(C,H,W)->(H,W,C)
+        if class_names:
+            title = f"pred : {class_names[label]}"
+        else:
+            title = f'pred : {label}'
+        plt.title(title)
+        plt.show()
       
