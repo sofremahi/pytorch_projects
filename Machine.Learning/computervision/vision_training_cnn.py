@@ -221,7 +221,7 @@ model_0.eval()
 with torch.inference_mode():
       for x , y in tqdm(test_data_loader):
           y_logits = model_1(x)
-          y_pred = torch.softmax(y_logits.squeeze(),dim = 0).argmax(dim = 1)
+          y_pred = torch.softmax(y_logits.squeeze(),dim = 1).argmax(dim = 1)
           y_preds.append(y_pred.cpu())
 y_pred_tensor = torch.cat(y_preds) 
 print(y_pred_tensor[:10])      
