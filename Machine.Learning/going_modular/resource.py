@@ -16,9 +16,8 @@ def download_data(url:str ,folder_name :str , is_zip:bool):
             request = requests.get(url=url , verify=False)
             f.write(request.content)
           if is_zip:
-           with open(path,"r")as zip_ref:
-              zip_ref.extractall(folder_path)    
-           os.remove(path)    
+           with zipfile.ZipFile(path,"r") as zip_ref:
+                zip_ref.extractall(folder_path)        
   return folder_path    
 
 
