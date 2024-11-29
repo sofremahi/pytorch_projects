@@ -1,0 +1,13 @@
+navigate to the file through out command line runner and specify the maze u trying to solve 
+having two python maze files goes by maze.py and maze-pro.py -> maze-pro.py is generated with the power of AI models
+
+example : python maze.py maze2.txt / python maze-pro.py maze2.txt
+
+create more maze puzzles if interested in this site : https://www.dcode.fr/maze-generator
+
+image : after solving the maze an image of our agent exploration steps of the maze will be created feel free to check it out maze.png / 
+ maze_solution.png
+
+github : https://github.com/sofremahi
+
+

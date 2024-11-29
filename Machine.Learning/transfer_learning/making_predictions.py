@@ -1,6 +1,7 @@
 import sys
 import os
 import torch
+device = device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 #getting our needed data
 from going_modular.predictions import pred_and_plot_image
@@ -26,9 +27,12 @@ train_dataloader , test_dataloader = get_train_test_dataloader()
 
 y_preds = []
 y_label=[]
+model.to(device)
 model.eval()
 with torch.inference_mode():
       for x , y in tqdm(test_dataloader):
+          x = x.to(device) 
+          y = y.to(device)
           y_logits = model(x)
           print(f"logits shape {y_logits.shape}")
           y_pred = torch.softmax(y_logits.squeeze(),dim = 1).argmax(dim = 1)
@@ -38,14 +42,14 @@ with torch.inference_mode():
           y_preds.append(y_pred.cpu())
           y_label.append(y.cpu())
 y_pred_tensor = torch.cat(y_preds)  
-y_label_tesnor = torch.cat(y_label) 
+y_label_tensor = torch.cat(y_label) 
 
 from torchmetrics import ConfusionMatrix
 from mlxtend.plotting import plot_confusion_matrix
 
 # 2. Setup confusion instance and compare predictions to targets
 confmat = ConfusionMatrix(task = "multiclass",num_classes=len(class_names))
-confmat_tensor = confmat(preds = y_pred_tensor , target=y_label_tesnor)
+confmat_tensor = confmat(preds = y_pred_tensor , target=y_label_tensor)
 gig , ax = plot_confusion_matrix(conf_mat = confmat_tensor.numpy(),
                                  class_names = class_names,
                                  figsize = (10,7))
