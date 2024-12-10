@@ -22,9 +22,10 @@ train_dataloader , test_dataloader , class_names = create_dataloaders(train_dir 
 image_batch , image_label = next(iter(train_dataloader))
 #get a single image and label through out the batch remove batch extra dimention
 image , label =  image_batch[0] , image_label[0]
+def get_image_and_label():
+    return image , label
 from Vit_model import PatchEmbeddings
 patchify = PatchEmbeddings(in_channels=3,patch_size=16,embedding_dim=768)
 #add extra batch dimention 
-patch_embedded_image = patchify(image.unsqueeze(dim=0))
-print(f"output shape of model PatchEmbeddings :{patch_embedded_image.shape}")
+patch_embedded_image = patchify(image.unsqueeze(dim=0)) #torch.Size([1, 196, 768])
 

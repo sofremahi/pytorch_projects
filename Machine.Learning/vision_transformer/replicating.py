@@ -141,14 +141,14 @@ print(f"Patch embedding sequence shape: {image_out_of_conv_flatten_arranged.shap
 plt.figure(figsize=(6,6))
 plt.imshow(image_out_of_conv_flatten_arranged[:,:,0].detach().numpy())
 plt.axis(False)
-# plt.show()
+plt.show()
 
 
 #configuration of class token for equation 1 
 #(1,196,768) - > append a learnable sequence -> (1,197,768) adding a extra nn.parameter
 
 # Get the batch size and embedding dimension
-batch_size = image_out_of_conv_flatten_arranged.shape[0] #=1
+batch_size = image_out_of_conv_flatten_arranged.shape[0] # =1
 embedding_dimension = image_out_of_conv_flatten_arranged.shape[-1]
 print(f"batch size is {batch_size} and the embedding dimention (output) is {embedding_dimension}")
 class_token = nn.Parameter(torch.ones(batch_size , 1 ,embedding_dimension),
@@ -161,7 +161,18 @@ patch_embedded_image_with_class_embedding = torch.cat((class_token, image_out_of
 print(f"patch embedded iamge with class token shape {patch_embedded_image_with_class_embedding.shape}") # [batch_size, class_token+number_of_patches, embedding_dimension]
 
 #creating position embeddings 
-num_of_patches = (height*width)/(patch_size**2)
+num_of_patches = int((height*width)/(patch_size**2))
 embedding_dimention = image_out_of_conv_flatten_arranged.shape[-1]
-position_embeddings = nn.Parameter(torch.ones(1 , num_of_patches+1,embedding_dimension),
-                           requires_grad=True)
+position_embedding = nn.Parameter(torch.ones(1, num_of_patches+1, embedding_dimension),
+                                  requires_grad=True)
+#add position embeddings to patches
+patch_and_position_embedding = patch_embedded_image_with_class_embedding + position_embedding
+print(patch_and_position_embedding.shape) #torch.Size([1, 197, 768] values are increased by the position they are on
+
+
+
+
+
+
+#transformer incoder equations 2 
+#multi head self attention
