@@ -69,7 +69,7 @@ train_data_loaders={"10_percent":train_dataloader_10_percent,
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 from going_modular.engine import train , create_writer
-
+from going_modular.utils import save_model
 for dataloader_name , train_dataloader in train_data_loaders.items():
     for model_name in models:
         for epochs in epochs_list:
@@ -97,3 +97,7 @@ for dataloader_name , train_dataloader in train_data_loaders.items():
                   writer=create_writer(experiment_name=dataloader_name,
                                        model_name=model_name,
                                        extra=f"{epochs}_epochs"))
+        save_filepath = f"{model_name}_{dataloader_name}_{epochs}_epochs.pth"
+        save_model(model=model,
+                       target_dir="models",
+                       model_name=save_filepath)
