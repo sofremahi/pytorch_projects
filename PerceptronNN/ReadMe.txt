@@ -1,0 +1,2 @@
+run flow.py to train and evaluate the model initialized for our BC.Data (breast cancer) it computes and train itself as for batches in our data loaders for 50 epochs 
+GitHub: https://github.com/sofremahi/pytorch_projects/tree/main/PerceptronNN
