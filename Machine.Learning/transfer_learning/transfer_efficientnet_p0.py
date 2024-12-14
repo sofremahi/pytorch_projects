@@ -72,9 +72,12 @@ from going_modular.engine import train
 #timing 
 from timeit import default_timer as timer
 start_time = timer()
-results = train(model , train_dataloader,test_dataloader,optimizer,loss_fn,5,device)
+results = train(model , train_dataloader,test_dataloader,optimizer,loss_fn,20,device)
 end_time = timer()
 print(f"total training time : {end_time-start_time}")
+#save model
+from going_modular import utils
+utils.save_model(model,"Machine.Learning/models","pre_trained_efficientnet_b0.pth")
 
 def get_trained_model():
     return model

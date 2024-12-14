@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-image_path = Path("data/") / "pizza_steak_sushi"
+image_path = Path("Machine.Learning/data/") / "pizza_steak_sushi"
 
 # def explor_directory(dir_path):
 #     """" returning a path contents """

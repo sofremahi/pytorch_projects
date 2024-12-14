@@ -14,7 +14,7 @@ manual_transform = transforms.Compose([
     normalize
 ])
 from pathlib import Path
-images_path = Path("data/pizza_steak_sushi")
+images_path = Path("Machine.Learning/data/pizza_steak_sushi")
 from going_modular.data_setup import create_dataloaders
 train_dataloader,test_dataloader,class_names= create_dataloaders(
     images_path/"train",images_path/"test",manual_transform,num_workers=0 ,batch_size=32

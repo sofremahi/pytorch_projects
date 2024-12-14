@@ -1,7 +1,7 @@
 import requests
 from pathlib import Path
 
-data_path = Path("data/")
+data_path = Path("Machine.Learning/data/")
 custom_image_path = data_path / "04-pizza-dad.jpeg"
 if not custom_image_path.is_file():
     with open(custom_image_path , "wb")as f :

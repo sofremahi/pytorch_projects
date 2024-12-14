@@ -4,7 +4,7 @@ import requests
 import zipfile
 
 #creating directory
-data_path = Path("data/")
+data_path = Path("Machine.Learning/data/")
 image_path = data_path / "pizza_steak_sushi"
 if image_path.is_dir():
     print(f"directory {image_path} already exists")

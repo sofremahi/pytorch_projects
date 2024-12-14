@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 #get the data ready (data , labels) for our computing
-file_path = 'bc.data'  
+file_path = 'PerceptronNN/bc.data'  
 data = pd.read_csv(file_path, header=None)
 data = data.dropna()
 num_columns = data.shape[1]

@@ -5,7 +5,7 @@ import torch
 from pathlib import Path
 import zipfile
 import requests
-data_path = Path("data/")
+data_path = Path("Machine.Learning/data/")
 image_path = data_path / "pizza_steak_sushi"
 #if the folder not existing downlaoding the data
 if image_path.is_dir():

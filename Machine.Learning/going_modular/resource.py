@@ -5,7 +5,7 @@ import requests
 
 
 def download_data(url:str ,folder_name :str , is_zip:bool):
-  data_path = Path("data/")
+  data_path = Path("Machine.Learning/data/")
   folder_path = data_path / folder_name
   if folder_path.is_dir():
       print(f"folder already exists")
